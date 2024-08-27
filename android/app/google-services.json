@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "306416822440",
+    "project_id": "snap-e93c7",
+    "storage_bucket": "snap-e93c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306416822440:android:b1b72d4347d9a1bae9ba9d",
+        "android_client_info": {
+          "package_name": "com.example.pr_8_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBwXehEnbqdktYAor78lemkd4kSFVKAVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
