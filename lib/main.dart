@@ -14,10 +14,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-      ScreenUtilInit(
-        designSize: Size(375, 812), // Example size
-        builder: (context, child) => const MyApp(),
-      ),
+    ScreenUtilInit(
+      designSize: Size(375, 812), // Example size
+      builder: (context, child) => const MyApp(),
+    ),
   );
 }
 
@@ -30,10 +30,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'snap',
       getPages: [
-        GetPage(name: '/', page: () => AuthGate(),),
-        GetPage(name: '/login', page: () => LoginScreen(),),
-        GetPage(name: '/signup', page: () => SignupScreen(),),
-        GetPage(name: '/user', page: () => UserScreen(),),
+        GetPage(
+          name: '/',
+          page: () => AuthGate(),
+        ),
+        GetPage(
+          name: '/login',
+          page: () => LoginScreen(),
+        ),
+        GetPage(
+          name: '/signup',
+          page: () => SignupScreen(),
+        ),
+        GetPage(
+          name: '/user',
+          page: () => UserScreen(),
+        ),
       ],
     );
   }

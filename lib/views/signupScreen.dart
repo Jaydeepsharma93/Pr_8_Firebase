@@ -147,7 +147,7 @@ class SignupScreen extends StatelessWidget {
                         controller.txtmobile.text,
                         controller.txtemail.text,
                         controller.txtpass.text,
-                       );
+                      );
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(

@@ -9,8 +9,6 @@ import 'package:pr_8_firebase/components/chatservice.dart';
 import 'package:pr_8_firebase/views/chatview.dart';
 import 'package:pr_8_firebase/views/loginscreen.dart';
 
-
-
 class UserScreen extends StatelessWidget {
   UserScreen({super.key});
 
@@ -121,7 +119,9 @@ class UserScreen extends StatelessWidget {
               ));
             },
           ),
-          Divider(thickness: 1.5,)
+          Divider(
+            thickness: 1.5,
+          )
         ],
       );
     } else {

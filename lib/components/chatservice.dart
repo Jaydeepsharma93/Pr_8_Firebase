@@ -7,22 +7,6 @@ class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-// get user stream
-
-/*
-  List<Map<String,dynamic>> =
-  [
-  {
-  'email : admin@gmail.com',
-  'id' : ....
-  },
-   {
-  'email : aayush@gmail.com',
-  'id' : ....
-  },
-  ]
- */
-
   Stream<List<Map<String, dynamic>>> getUserStream() {
     return _firestore.collection("users").snapshots().map(
           (snapshot) {
@@ -38,11 +22,6 @@ class ChatService {
       },
     );
   }
-
-
-  // we are going to create multiple chat rooms, for different user
-
-// send message
 
   // lets go
   Future<void> sendMessage(String receiverID, message) async {
@@ -87,4 +66,31 @@ class ChatService {
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
+
+  Future<void> editMessage(String chatRoomID, String messageID, String newMessageContent) async {
+    try {
+      await _firestore
+          .collection("rooms")
+          .doc(chatRoomID)
+          .collection("message")
+          .doc(messageID)
+          .update({"message": newMessageContent});
+    } catch (e) {
+      print("Error updating message: $e");
+    }
+  }
+
+  Future<void> unsendMessage(String chatRoomID, String messageID) async {
+    try {
+      await _firestore
+          .collection("rooms")
+          .doc(chatRoomID)
+          .collection("message")
+          .doc(messageID)
+          .delete();
+    } catch (e) {
+      print("Error deleting message: $e");
+    }
+  }
+
 }

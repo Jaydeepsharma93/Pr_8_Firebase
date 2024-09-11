@@ -8,8 +8,7 @@ class ChatScreen extends StatefulWidget {
   final String receiverEmail;
   final String name;
 
-  const ChatScreen(
-      {super.key, required this.receiverEmail, required this.name});
+  const ChatScreen({super.key, required this.receiverEmail, required this.name});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -19,13 +18,89 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String _editMessageID = '';
+  String _editedMessageContent = '';
 
   Future<void> sendMessage() async {
     if (_messageController.text.isNotEmpty) {
-      await _chatService.sendMessage(
-          widget.receiverEmail, _messageController.text);
+      await _chatService.sendMessage(widget.receiverEmail, _messageController.text);
       _messageController.clear();
     }
+  }
+
+  void _showEditMessageDialog(String messageID, String currentMessage) {
+    _editMessageID = messageID;
+    _editedMessageContent = currentMessage;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController _editController = TextEditingController(text: currentMessage);
+
+        return AlertDialog(
+          title: Text("Edit Message"),
+          content: TextField(
+            controller: _editController,
+            decoration: InputDecoration(hintText: "Edit your message"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _chatService.editMessage(
+                    _getChatRoomID(widget.receiverEmail, _auth.currentUser!.email!),
+                    messageID,
+                    _editController.text
+                );
+              },
+              child: Text("Save"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showMessageOptions(String messageID, String messageContent) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text("Edit Message"),
+              onTap: () {
+                Navigator.pop(context);
+                _showEditMessageDialog(messageID, messageContent);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.delete),
+              title: Text("Unsend Message"),
+              onTap: () {
+                Navigator.pop(context);
+                _chatService.unsendMessage(
+                    _getChatRoomID(widget.receiverEmail, _auth.currentUser!.email!),
+                    messageID
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _getChatRoomID(String userID, String otherUserID) {
+    List<String> ids = [userID, otherUserID];
+    ids.sort();
+    return ids.join('_');
   }
 
   @override
@@ -51,9 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                      child: Text('Loading...',
-                          style: TextStyle(fontSize: 20.sp)));
+                  return Center(child: Text('Loading...', style: TextStyle(fontSize: 20.sp)));
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -66,28 +139,29 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var message = messages[index].data();
+                    String messageID = messages[index].id;
                     bool isSentByMe = message['senderID'] == senderID;
 
-                    return Align(
-                      alignment: isSentByMe
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 5.h, horizontal: 10.w),
-                        child: Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: BoxDecoration(
-                            color: isSentByMe
-                                ? Colors.blueAccent
-                                : Colors.grey[300],
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Text(
-                            message['message'],
-                            style: TextStyle(
-                                color:
-                                    isSentByMe ? Colors.white : Colors.black),
+                    return GestureDetector(
+                      onLongPress: () {
+                        if(isSentByMe){
+                          _showMessageOptions(messageID, message['message']);
+                        }
+                      },
+                      child: Align(
+                        alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+                          child: Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: isSentByMe ? Colors.blueAccent : Colors.grey[300],
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Text(
+                              message['message'],
+                              style: TextStyle(color: isSentByMe ? Colors.white : Colors.black),
+                            ),
                           ),
                         ),
                       ),
@@ -107,11 +181,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 decoration: InputDecoration(
                   suffixIcon: Icon(Icons.mic),
                   hintText: 'Send a message',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.r)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.r)),
                 ),
                 onFieldSubmitted: (value) {
-                  sendMessage(); // Fixed: Call the method with parentheses
+                  sendMessage();
                 },
               ),
             ),
