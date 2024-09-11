@@ -16,7 +16,7 @@ class FirebaseAuthServices {
   Future<void> createAccountUsingEmail(
       String email, String password, String name, String mobile) async {
 
-    print('------------------- Create function called--------------------------');
+    print('------------------- Create function called-------------------------');
 
 
     try {
