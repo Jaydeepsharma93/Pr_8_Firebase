@@ -1,6 +1,6 @@
 # Firebase Chat App
 
-This is a **real-time chat application** built using **Flutter** and **Firebase**. The app allows users to sign up, log in, and exchange messages with other users. It also supports real-time messaging, media sharing, and user authentication.
+This is a **real-time chat application** built using **Flutter** and **Firebase**. The app allows users to sign up, log in, and exchange messages with other users. It also supports real-time messaging, and user authentication.
 
 ## Features
 
