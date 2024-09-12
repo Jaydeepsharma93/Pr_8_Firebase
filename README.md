@@ -27,6 +27,12 @@ This is a **real-time chat application** built using **Flutter** and **Firebase*
 <img src="https://github.com/user-attachments/assets/55fa08e7-dc45-4ee0-907a-e9f4f9d1b1db" width = 32%>
 <img src="https://github.com/user-attachments/assets/46bb3e56-84f0-4573-8b8f-229fad52c312" width = 32%>
 
+<div>
+
+<video src="https://github.com/user-attachments/assets/39ca2b5f-ed77-4410-876d-4912865abae6" >
+
+</div>
+
 ## Getting Started
 
 ### Prerequisites
